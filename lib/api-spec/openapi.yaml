@@ -1,0 +1,661 @@
+openapi: 3.1.0
+info:
+  title: Api
+  version: 0.1.0
+  description: Train Schedule and Reservation Management System API
+servers:
+  - url: /api
+    description: Base API path
+tags:
+  - name: health
+    description: Health operations
+  - name: auth
+    description: Authentication
+  - name: trains
+    description: Train management
+  - name: schedules
+    description: Schedule management
+  - name: passengers
+    description: Passenger management
+  - name: reservations
+    description: Reservation management
+  - name: reports
+    description: Reports and statistics
+paths:
+  /healthz:
+    get:
+      operationId: healthCheck
+      tags: [health]
+      summary: Health check
+      responses:
+        "200":
+          description: Healthy
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HealthStatus"
+
+  /auth/login:
+    post:
+      operationId: login
+      tags: [auth]
+      summary: Login user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/LoginBody"
+      responses:
+        "200":
+          description: Login successful
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/LoginResponse"
+        "401":
+          description: Invalid credentials
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /auth/logout:
+    post:
+      operationId: logout
+      tags: [auth]
+      summary: Logout user
+      responses:
+        "200":
+          description: Logged out
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MessageResponse"
+
+  /auth/me:
+    get:
+      operationId: getMe
+      tags: [auth]
+      summary: Get current user
+      responses:
+        "200":
+          description: Current user info
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+        "401":
+          description: Not authenticated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /auth/forgot-password:
+    post:
+      operationId: forgotPassword
+      tags: [auth]
+      summary: Request password reset
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ForgotPasswordBody"
+      responses:
+        "200":
+          description: Reset instructions sent
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MessageResponse"
+
+  /trains:
+    get:
+      operationId: listTrains
+      tags: [trains]
+      summary: List all trains
+      responses:
+        "200":
+          description: List of trains
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Train"
+    post:
+      operationId: createTrain
+      tags: [trains]
+      summary: Create a train
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateTrainBody"
+      responses:
+        "201":
+          description: Train created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Train"
+
+  /trains/{trainId}:
+    put:
+      operationId: updateTrain
+      tags: [trains]
+      summary: Update a train
+      parameters:
+        - name: trainId
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateTrainBody"
+      responses:
+        "200":
+          description: Train updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Train"
+    delete:
+      operationId: deleteTrain
+      tags: [trains]
+      summary: Delete a train
+      parameters:
+        - name: trainId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MessageResponse"
+
+  /schedules:
+    get:
+      operationId: listSchedules
+      tags: [schedules]
+      summary: List all schedules
+      responses:
+        "200":
+          description: List of schedules
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Schedule"
+    post:
+      operationId: createSchedule
+      tags: [schedules]
+      summary: Create a schedule
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateScheduleBody"
+      responses:
+        "201":
+          description: Schedule created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Schedule"
+
+  /schedules/{scheduleId}:
+    put:
+      operationId: updateSchedule
+      tags: [schedules]
+      summary: Update a schedule
+      parameters:
+        - name: scheduleId
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateScheduleBody"
+      responses:
+        "200":
+          description: Schedule updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Schedule"
+    delete:
+      operationId: deleteSchedule
+      tags: [schedules]
+      summary: Delete a schedule
+      parameters:
+        - name: scheduleId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MessageResponse"
+
+  /passengers:
+    get:
+      operationId: listPassengers
+      tags: [passengers]
+      summary: List all passengers
+      responses:
+        "200":
+          description: List of passengers
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Passenger"
+    post:
+      operationId: createPassenger
+      tags: [passengers]
+      summary: Register a passenger
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreatePassengerBody"
+      responses:
+        "201":
+          description: Passenger registered
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Passenger"
+
+  /passengers/{passengerId}:
+    get:
+      operationId: getPassenger
+      tags: [passengers]
+      summary: Get a passenger
+      parameters:
+        - name: passengerId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Passenger details
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Passenger"
+    put:
+      operationId: updatePassenger
+      tags: [passengers]
+      summary: Update a passenger
+      parameters:
+        - name: passengerId
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreatePassengerBody"
+      responses:
+        "200":
+          description: Passenger updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Passenger"
+
+  /reservations:
+    get:
+      operationId: listReservations
+      tags: [reservations]
+      summary: List all reservations
+      responses:
+        "200":
+          description: List of reservations
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Reservation"
+    post:
+      operationId: createReservation
+      tags: [reservations]
+      summary: Create a reservation
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateReservationBody"
+      responses:
+        "201":
+          description: Reservation created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Reservation"
+        "400":
+          description: No seats available
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /reservations/{reservationId}:
+    get:
+      operationId: getReservation
+      tags: [reservations]
+      summary: Get a reservation
+      parameters:
+        - name: reservationId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Reservation details
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Reservation"
+
+  /reservations/{reservationId}/cancel:
+    post:
+      operationId: cancelReservation
+      tags: [reservations]
+      summary: Cancel a reservation
+      parameters:
+        - name: reservationId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Reservation cancelled
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Reservation"
+
+  /reports/summary:
+    get:
+      operationId: getReportSummary
+      tags: [reports]
+      summary: Get summary report
+      responses:
+        "200":
+          description: Summary statistics
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ReportSummary"
+
+  /reports/monthly:
+    get:
+      operationId: getMonthlyReport
+      tags: [reports]
+      summary: Get monthly booking report
+      responses:
+        "200":
+          description: Monthly report data
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/MonthlyReport"
+
+components:
+  schemas:
+    HealthStatus:
+      type: object
+      properties:
+        status:
+          type: string
+      required: [status]
+
+    ErrorResponse:
+      type: object
+      properties:
+        error:
+          type: string
+      required: [error]
+
+    MessageResponse:
+      type: object
+      properties:
+        message:
+          type: string
+      required: [message]
+
+    LoginBody:
+      type: object
+      properties:
+        email:
+          type: string
+        password:
+          type: string
+      required: [email, password]
+
+    ForgotPasswordBody:
+      type: object
+      properties:
+        email:
+          type: string
+      required: [email]
+
+    LoginResponse:
+      type: object
+      properties:
+        user:
+          $ref: "#/components/schemas/User"
+        message:
+          type: string
+      required: [user, message]
+
+    User:
+      type: object
+      properties:
+        userId:
+          type: integer
+        name:
+          type: string
+        email:
+          type: string
+        role:
+          type: string
+          enum: [admin, staff, super_administrator]
+      required: [userId, name, email, role]
+
+    Train:
+      type: object
+      properties:
+        trainId:
+          type: integer
+        trainName:
+          type: string
+        seatCapacity:
+          type: integer
+      required: [trainId, trainName, seatCapacity]
+
+    CreateTrainBody:
+      type: object
+      properties:
+        trainName:
+          type: string
+        seatCapacity:
+          type: integer
+      required: [trainName, seatCapacity]
+
+    Schedule:
+      type: object
+      properties:
+        scheduleId:
+          type: integer
+        trainId:
+          type: integer
+        trainName:
+          type: string
+        origin:
+          type: string
+        destination:
+          type: string
+        departureTime:
+          type: string
+        arrivalTime:
+          type: string
+        date:
+          type: string
+        availableSeats:
+          type: integer
+        ticketPrice:
+          type: number
+      required: [scheduleId, trainId, trainName, origin, destination, departureTime, arrivalTime, date, availableSeats, ticketPrice]
+
+    CreateScheduleBody:
+      type: object
+      properties:
+        trainId:
+          type: integer
+        origin:
+          type: string
+        destination:
+          type: string
+        departureTime:
+          type: string
+        arrivalTime:
+          type: string
+        date:
+          type: string
+        ticketPrice:
+          type: number
+      required: [trainId, origin, destination, departureTime, arrivalTime, date, ticketPrice]
+
+    Passenger:
+      type: object
+      properties:
+        passengerId:
+          type: integer
+        fullName:
+          type: string
+        phoneNumber:
+          type: string
+        identificationNumber:
+          type: string
+        email:
+          type: string
+      required: [passengerId, fullName, phoneNumber, identificationNumber]
+
+    CreatePassengerBody:
+      type: object
+      properties:
+        fullName:
+          type: string
+        phoneNumber:
+          type: string
+        identificationNumber:
+          type: string
+        email:
+          type: string
+      required: [fullName, phoneNumber, identificationNumber]
+
+    Reservation:
+      type: object
+      properties:
+        reservationId:
+          type: integer
+        passengerId:
+          type: integer
+        passengerName:
+          type: string
+        scheduleId:
+          type: integer
+        trainName:
+          type: string
+        origin:
+          type: string
+        destination:
+          type: string
+        date:
+          type: string
+        seatNumber:
+          type: integer
+        status:
+          type: string
+          enum: [confirmed, cancelled]
+        reservationDate:
+          type: string
+        ticketPrice:
+          type: number
+      required: [reservationId, passengerId, passengerName, scheduleId, trainName, origin, destination, date, seatNumber, status, reservationDate, ticketPrice]
+
+    CreateReservationBody:
+      type: object
+      properties:
+        passengerId:
+          type: integer
+        scheduleId:
+          type: integer
+      required: [passengerId, scheduleId]
+
+    ReportSummary:
+      type: object
+      properties:
+        totalTrains:
+          type: integer
+        totalSchedules:
+          type: integer
+        totalPassengers:
+          type: integer
+        totalReservations:
+          type: integer
+        confirmedReservations:
+          type: integer
+        cancelledReservations:
+          type: integer
+        totalRevenue:
+          type: number
+      required: [totalTrains, totalSchedules, totalPassengers, totalReservations, confirmedReservations, cancelledReservations, totalRevenue]
+
+    MonthlyReport:
+      type: object
+      properties:
+        month:
+          type: string
+        bookings:
+          type: integer
+        revenue:
+          type: number
+      required: [month, bookings, revenue]

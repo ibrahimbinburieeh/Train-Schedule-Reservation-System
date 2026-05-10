@@ -1,0 +1,31 @@
+kind = "web"
+previewPath = "/"
+title = "Train Schedule & Reservation System"
+version = "1.0.0"
+id = "artifacts/train-system"
+router = "path"
+
+[[integratedSkills]]
+name = "react-vite"
+version = "1.0.0"
+
+[[services]]
+name = "web"
+paths = [ "/" ]
+localPort = 24992
+
+[services.development]
+run = "pnpm --filter @workspace/train-system run dev"
+
+[services.production]
+build = [ "pnpm", "--filter", "@workspace/train-system", "run", "build" ]
+publicDir = "artifacts/train-system/dist/public"
+serve = "static"
+
+[[services.production.rewrites]]
+from = "/*"
+to = "/index.html"
+
+[services.env]
+PORT = "24992"
+BASE_PATH = "/"

@@ -1,0 +1,60 @@
+# ── Dependencies ──────────────────────────────────────────────────────────────
+node_modules/
+.pnpm-store/
+
+# ── Build outputs ─────────────────────────────────────────────────────────────
+dist/
+dist-ssr/
+build/
+out-tsc/
+tmp/
+*.tsbuildinfo
+
+# ── Environment & Secrets ─────────────────────────────────────────────────────
+.env
+.env.local
+.env.*.local
+.env.production
+.env.development
+
+# ── Replit-specific (not needed on GitHub) ────────────────────────────────────
+.cache/
+.local/
+.agents/
+.replit
+.replitignore
+replit.md
+artifacts/mockup-sandbox/
+
+# ── Development assets (uploaded during development, not part of the app) ─────
+attached_assets/
+
+# ── Compressed files ──────────────────────────────────────────────────────────
+*.zip
+*.tar.gz
+*.rar
+
+# ── Logs ──────────────────────────────────────────────────────────────────────
+*.log
+npm-debug.log*
+yarn-error.log
+pnpm-debug.log*
+
+# ── IDEs and editors ──────────────────────────────────────────────────────────
+.idea/
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+*.sublime-workspace
+.cursor/
+
+# ── OS files ──────────────────────────────────────────────────────────────────
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# ── Other lock files (keep pnpm-lock.yaml only) ───────────────────────────────
+package-lock.json
+yarn.lock
